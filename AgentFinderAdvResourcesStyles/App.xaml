@@ -8,10 +8,19 @@
             <Setter Property="Control.FontSize" Value="14pt"/>
             <Setter Property="Control.FontStyle" Value="Italic"/>
         </Style>
-        <Style x:Key="ButtonStyle">
-            <Setter Property="Control.Background" Value="AliceBlue"/>
-            <Setter Property="Control.BorderBrush" Value="Blue"/>
+
+        <Style TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Control.Background" Value="DeepPink"/>
+                <Setter Property="Control.BorderBrush" Value="Blue"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="FontWeight" Value="ExtraBold"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
+
         <Style TargetType="{x:Type Label}">
             <Setter Property="Control.Background" Value="SandyBrown"/>
             <Setter Property="Control.BorderBrush" Value="Brown"/>

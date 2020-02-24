@@ -42,7 +42,7 @@ namespace AgentFinderAdvResourcesStyles
             }
             set
             {
-                if (this.id.Any(x => !char.IsLetter(x)))
+                if (this.id.Any(x => char.IsLetter(x)))
                     throw new ApplicationException("ID can't contain letters"); 
                 else
                 {
