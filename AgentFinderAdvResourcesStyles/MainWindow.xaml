@@ -10,7 +10,8 @@
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
-    <Grid Background="{Binding Path=BackgroundColor}">
+    <Grid Background="{Binding Path=BackgroundColor}"
+          Validation.Error="ValidationError">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -90,13 +91,15 @@
                  Grid.Row="1"
                  Grid.Column="1"
                  Margin="0,5,5,0"
-                 Text="{Binding Path=CurrentAgent.ID}"/>
+                 Text="{Binding Path=CurrentAgent.ID}"
+                 Style="{StaticResource TextBoxStyle}"/>
         <TextBox Name="CodeNameBox" 
                  Grid.Row="2"
                  Grid.Column="1"
                  Margin="0,5,5,0"
                  MinWidth="300"
-                 Text="{Binding Path=CurrentAgent.CodeName}"/>
+                 Text="{Binding Path=CurrentAgent.CodeName}"
+                 Style="{StaticResource TextBoxStyle}"/>
         <TextBox Name="SpecialityBox" 
                  Grid.Row="3"
                  Grid.Column="1"

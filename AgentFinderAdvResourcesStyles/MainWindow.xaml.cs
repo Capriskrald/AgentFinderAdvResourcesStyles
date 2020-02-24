@@ -24,5 +24,13 @@ namespace AgentFinderAdvResourcesStyles
         {
             InitializeComponent();
         }
+
+        private void ValidationError(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                MessageBox.Show(e.Error.ErrorContent.ToString());
+            }
+        }
     }
 }

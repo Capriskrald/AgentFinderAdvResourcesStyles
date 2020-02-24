@@ -4,6 +4,17 @@
              xmlns:local="clr-namespace:AgentFinderAdvResourcesStyles"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-
+        <Style x:Key="TextBoxStyle">
+            <Setter Property="Control.FontSize" Value="14pt"/>
+            <Setter Property="Control.FontStyle" Value="Italic"/>
+        </Style>
+        <Style x:Key="ButtonStyle">
+            <Setter Property="Control.Background" Value="AliceBlue"/>
+            <Setter Property="Control.BorderBrush" Value="Blue"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Control.Background" Value="SandyBrown"/>
+            <Setter Property="Control.BorderBrush" Value="Brown"/>
+        </Style>
     </Application.Resources>
 </Application>
