@@ -1,0 +1,155 @@
+﻿<Window x:Class="AgentFinderAdvResourcesStyles.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AgentFinderAdvResourcesStyles"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid Background="{Binding Path=BackgroundColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.ColumnSpan="3"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="New" Command="{Binding Path=NewCommand}"/>
+                    <MenuItem Header="Open" Command="{Binding Path=OpenFileCommand}" CommandParameter="{Binding ElementName=FileNameBox, Path=Text}"/>
+                    <MenuItem Header="Save" Command="{Binding Path=SaveCommand}"/>
+                    <MenuItem Header="Save as" Command="{Binding Path=SaveAsCommand}" CommandParameter="{Binding ElementName=FileNameBox, Path=Text}"/>
+                    <MenuItem Header="Exit" Command="{Binding Path=CloseCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Agent">
+                    <MenuItem Header="Previous" Command="{Binding Path=PreviousCommand}"/>
+                    <MenuItem Header="Next" Command="{Binding Path=NextCommand}"/>
+                    <MenuItem Header="Add new" Command="{Binding Path=AddNewCommand}"/>
+                    <MenuItem Header="Delete" Command="{Binding Path=DeleteCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Color">
+                    <MenuItem Header="White" Name="MenuColor1" Command="{Binding Path=SetBackgroundCommand}" CommandParameter="{Binding ElementName=MenuColor1, Path=Header}"/>
+                    <MenuItem Header="OldLace" Name="MenuColor2" Command="{Binding Path=SetBackgroundCommand}" CommandParameter="{Binding ElementName=MenuColor2, Path=Header}"/>
+                    <MenuItem Header="Green" Name="MenuColor3" Command="{Binding Path=SetBackgroundCommand}" CommandParameter="{Binding ElementName=MenuColor3, Path=Header}"/>
+                    <MenuItem Header="Gray" Name="MenuColor4" Command="{Binding Path=SetBackgroundCommand}" CommandParameter="{Binding ElementName=MenuColor4, Path=Header}"/>
+                </MenuItem>
+            </Menu>
+            <DockPanel Grid.Row="1">
+                <ToolBar DockPanel.Dock="Top" FontSize="14" FontWeight="Bold" Background="GhostWhite">
+                    <Button ToolTip="Go to previous agent" Command="{Binding Path=PreviousCommand}" Content="&lt;"/>
+                    <Button ToolTip="Go to next agent" Command="{Binding Path=NextCommand}" Content="&gt;"/>
+                    <Button ToolTip="Add new agent" Command="{Binding Path=AddNewCommand}" Content="+"/>
+                    <Button ToolTip="Delete selected agent" Command="{Binding Path=DeleteCommand}" Content="-"/>
+                    <Label Content="File name: " Target="{Binding ElementName=FileNameBox}"/>
+                    <TextBox Name="FileNameBox" Width="150"/>
+                </ToolBar>
+            </DockPanel>
+        </Grid>
+
+        <Label Content="Id" 
+               Grid.Row="1"
+               Grid.Column="0"
+               Margin="5,5,0,0"/>
+        <Label Content="CodeName" 
+               Grid.Row="2"
+               Grid.Column="0"
+               Margin="5,5,0,0"/>
+        <Label Content="Speciality" 
+               Grid.Row="3"
+               Grid.Column="0"
+               Margin="5,5,0,0"/>
+        <Label Content="Assignment" 
+               Grid.Row="4"
+               Grid.Column="0"
+               Margin="5,5,0,0"/>
+        <TextBox Name="IdBox" 
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 Margin="0,5,5,0"
+                 Text="{Binding Path=CurrentAgent.ID}"/>
+        <TextBox Name="CodeNameBox" 
+                 Grid.Row="2"
+                 Grid.Column="1"
+                 Margin="0,5,5,0"
+                 MinWidth="300"
+                 Text="{Binding Path=CurrentAgent.CodeName}"/>
+        <TextBox Name="SpecialityBox" 
+                 Grid.Row="3"
+                 Grid.Column="1"
+                 Margin="0,5,5,0"
+                 Text="{Binding Path=CurrentAgent.Speciality}"/>
+        <TextBox Name="AssignmentBox" 
+                 Grid.Row="4"
+                 Grid.Column="1"
+                 MinHeight="100"
+                 Margin="0,5,5,5"
+                 Text="{Binding Path=CurrentAgent.Assignment}"/>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="5"
+                    Orientation="Horizontal">
+            <Button Name="BtnBack"
+                    Content="&lt;"
+                    MinWidth="60"
+                    MinHeight="20"
+                    Margin="5"
+                    Command="{Binding Path=PreviousCommand}"></Button>
+            <Button Name="BtnForward"
+                    Content="&gt;"
+                    MinWidth="60"
+                    MinHeight="20"
+                    Margin="5" 
+                    Command="{Binding Path=NextCommand}"></Button>
+            <Button Name="BtnAdd"
+                    Content="Add"
+                    MinWidth="60"
+                    MinHeight="20"
+                    Margin="5" 
+                    Command="{Binding Path=AddNewCommand}">
+            </Button>
+        </StackPanel>
+        <ListBox Name="AgentListBox"
+                 Grid.Column="2"
+                 Grid.Row="1" Grid.RowSpan="6"
+                 Margin="5,5,5,5" 
+                 ItemsSource="{Binding Path=Agents}"
+                 SelectedItem="{Binding Path=CurrentAgent}"
+                 SelectedIndex="{Binding Path=CurrentIndex}"
+                 DisplayMemberPath="CodeName"
+                 IsSynchronizedWithCurrentItem="True">
+        </ListBox>
+        <DockPanel Grid.Column="0" Grid.ColumnSpan="3" 
+                   Grid.Row="7">
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem>
+                    <TextBlock Text="Agent count:"/>
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock Text="{Binding Path=Agents.Count}"></TextBlock>
+                </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='gg dddd dd/MM/yyyy hh:mm:ss tt'}"/>
+                </StatusBarItem>
+            </StatusBar>
+        </DockPanel>
+    </Grid>
+</Window>
