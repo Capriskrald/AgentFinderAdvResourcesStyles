@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:AgentFinderAdvResourcesStyles"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <SolidColorBrush x:Key="myBrush" Color="OldLace"/>
+
     </Application.Resources>
 </Application>

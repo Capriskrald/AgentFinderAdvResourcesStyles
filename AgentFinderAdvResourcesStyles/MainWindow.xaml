@@ -56,8 +56,12 @@
             </Menu>
             <DockPanel Grid.Row="1">
                 <ToolBar DockPanel.Dock="Top" FontSize="14" FontWeight="Bold" Background="GhostWhite">
-                    <Button ToolTip="Go to previous agent" Command="{Binding Path=PreviousCommand}" Content="&lt;"/>
-                    <Button ToolTip="Go to next agent" Command="{Binding Path=NextCommand}" Content="&gt;"/>
+                    <Button ToolTip="Go to previous agent" Command="{Binding Path=PreviousCommand}" Width="32">
+                        <Image Source="backArrow.bmp"/>
+                    </Button>
+                    <Button ToolTip="Go to next agent" Command="{Binding Path=NextCommand}" Width="32">
+                        <Image Source="nextArrow.bmp"/>
+                    </Button>
                     <Button ToolTip="Add new agent" Command="{Binding Path=AddNewCommand}" Content="+"/>
                     <Button ToolTip="Delete selected agent" Command="{Binding Path=DeleteCommand}" Content="-"/>
                     <Label Content="File name: " Target="{Binding ElementName=FileNameBox}"/>
