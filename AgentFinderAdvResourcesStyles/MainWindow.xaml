@@ -92,7 +92,7 @@
                  Grid.Column="1"
                  Margin="0,5,5,0"
                  Text="{Binding Path=CurrentAgent.ID}"
-                 Style="{StaticResource TextBoxStyle}"/>
+                 Style="{StaticResource JamesBondStyle}"/>
         <TextBox Name="CodeNameBox" 
                  Grid.Row="2"
                  Grid.Column="1"

@@ -25,5 +25,15 @@
             <Setter Property="Control.Background" Value="SandyBrown"/>
             <Setter Property="Control.BorderBrush" Value="Brown"/>
         </Style>
+
+        <Style x:Key="JamesBondStyle" TargetType="{x:Type TextBox}"
+               BasedOn="{StaticResource TextBoxStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=CurrentAgent.ID}" Value="007">
+                    <Setter Property="BorderBrush" Value="GreenYellow"/>
+                    <Setter Property="BorderThickness" Value="5"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>
