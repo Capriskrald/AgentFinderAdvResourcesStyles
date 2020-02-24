@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Xml.Serialization;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -19,8 +20,7 @@ namespace AgentFinderAdvResourcesStyles
 {
     class MainWindowViewModel : BindableBase
     {
-        private ObservableCollection<Agent> agents;
-        private string filename = "";
+        private string _availableFiletypes = "xml files (*.xml)|*.xml";
 
         public MainWindowViewModel()
         {
@@ -33,6 +33,7 @@ namespace AgentFinderAdvResourcesStyles
 
         #region Properties
 
+        private ObservableCollection<Agent> agents;
         public ObservableCollection<Agent> Agents
         {
             get { return agents; }
@@ -44,6 +45,13 @@ namespace AgentFinderAdvResourcesStyles
         {
             get { return currentAgent; }
             set { SetProperty(ref currentAgent, value); }
+        }
+
+        private string _filename = null;
+        public string Filename
+        {
+            get => _filename;
+            private set => SetProperty(ref _filename, value);
         }
 
         private int currentIndex = -1;
@@ -118,31 +126,6 @@ namespace AgentFinderAdvResourcesStyles
             }
         }
 
-        private ICommand _newCommand;
-        public ICommand NewCommand
-        {
-            get { return _newCommand ?? (_newCommand = new DelegateCommand(NewFileCommand_Execute)); }
-        }
-
-        public void NewFileCommand_Execute()
-        {
-            MessageBoxResult res = MessageBox.Show("Any unsaved data will be lost. Are you sure you want to continue?",
-                "Warning", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            if (res == MessageBoxResult.Yes)
-            {
-                Agents.Clear();
-                filename = "";
-                Agents.Add(new Agent());
-                CurrentIndex = Agents.Count - 1;
-            }
-        }
-
-        private ICommand _closeCommand;
-        public ICommand CloseCommand
-        {
-            get { return _closeCommand ?? (_closeCommand = new DelegateCommand(() => App.Current.MainWindow.Close())); }
-        }
-
         private ICommand _setBackgroundCommand;
         public ICommand SetBackgroundCommand
         {
@@ -155,90 +138,75 @@ namespace AgentFinderAdvResourcesStyles
                 BackgroundColor = argBackgroundColor;
         }
 
-        ICommand _SaveAsCommand;
-        public ICommand SaveAsCommand
-        {
-            get { return _SaveAsCommand ?? (_SaveAsCommand = new DelegateCommand<string>(SaveAsCommand_Execute)); }
-        }
-
-        private void SaveAsCommand_Execute(string argFilename)
-        {
-            if (argFilename == "")
-            {
-                MessageBox.Show("You must enter a file name in the File Name textbox!", "Unable to save file",
-                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            else
-            {
-                filename = argFilename;
-                SaveFileCommand_Execute();
-            }
-        }
-
-        ICommand _SaveCommand;
-        public ICommand SaveCommand
+        ICommand _saveAs;
+        public ICommand SaveAs
         {
             get
             {
-                return _SaveCommand ?? (_SaveCommand = new DelegateCommand(SaveFileCommand_Execute, SaveFileCommand_CanExecute)
-                           .ObservesProperty(() => Agents.Count));
+                return _saveAs ?? (_saveAs = new DelegateCommand(() => { executeSaveAs(); }));
             }
         }
 
-        private void SaveFileCommand_Execute()
+        public void executeSaveAs()
         {
-            // Create an instance of the XmlSerializer class and specify the type of object to serialize.
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Agent>));
-            TextWriter writer = new StreamWriter(filename);
-            // Serialize all the agents.
-            serializer.Serialize(writer, Agents);
+            XmlSerializer XML_serial = new XmlSerializer(typeof(ObservableCollection<Agent>));
+
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = _availableFiletypes;
+            saveFileDialog1.ShowDialog();
+            Filename = saveFileDialog1.FileName;
+
+            TextWriter writer = new StreamWriter(Filename);
+
+            XML_serial.Serialize(writer, Agents);
+
             writer.Close();
         }
 
-        private bool SaveFileCommand_CanExecute()
+        ICommand _open;
+        public ICommand Open
         {
-            return (filename != "") && (Agents.Count > 0);
+            get
+            {
+                return _open ?? (_open = new DelegateCommand(() => { executeOpen(); }));
+            }
         }
 
-        ICommand _OpenFileCommand;
-        public ICommand OpenFileCommand
+        public void executeOpen()
         {
-            get { return _OpenFileCommand ?? (_OpenFileCommand = new DelegateCommand<string>(OpenFileCommand_Execute)); }
+            XmlSerializer XML_serial = new XmlSerializer(typeof(ObservableCollection<Agent>));
+
+
+            OpenFileDialog OpenFileDialog1 = new OpenFileDialog();
+            OpenFileDialog1.Filter = _availableFiletypes;
+            OpenFileDialog1.ShowDialog();
+            Filename = OpenFileDialog1.FileName;
+            FileStream fs = new FileStream(Filename, FileMode.Open);
+            Agents = (ObservableCollection<Agent>)XML_serial.Deserialize(fs);
+            fs.Close();
         }
 
-        private void OpenFileCommand_Execute(string argFilename)
+        ICommand _save;
+        public ICommand Save
         {
-            if (argFilename == "")
+            get
             {
-
-                MessageBox.Show("You must enter a file name in the File Name textbox!", "Unable to save file",
-                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return _save ?? (_save = new DelegateCommand(() => { executeSave(); }));
             }
-            else
-            {
-                filename = argFilename;
-                var tempAgents = new ObservableCollection<Agent>();
+        }
 
-                // Create an instance of the XmlSerializer class and specify the type of object to deserialize.
-                XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Agent>));
-                try
-                {
-                    TextReader reader = new StreamReader(filename);
-                    // Deserialize all the agents.
-                    tempAgents = (ObservableCollection<Agent>)serializer.Deserialize(reader);
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Unable to open file", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                Agents = tempAgents;
+        public void executeSave()
+        {
+            XmlSerializer XML_serial = new XmlSerializer(typeof(ObservableCollection<Agent>));
+            TextWriter writer = new StreamWriter(Filename);
+            XML_serial.Serialize(writer, Agents);
+            writer.Close();
+        }
 
-                // We have to insert the agents in the existing collection. 
-                //Agents.Clear();
-                //foreach (var agent in tempAgents)
-                //    Add(agent);
-            }
+        private ICommand _closeCommand;
+        public ICommand CloseCommand
+        {
+            get { return _closeCommand ?? (_closeCommand = new DelegateCommand(() => App.Current.MainWindow.Close())); }
         }
 
         #endregion
