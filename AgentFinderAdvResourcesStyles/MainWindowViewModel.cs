@@ -180,9 +180,13 @@ namespace AgentFinderAdvResourcesStyles
             OpenFileDialog OpenFileDialog1 = new OpenFileDialog();
             OpenFileDialog1.Filter = _availableFiletypes;
             OpenFileDialog1.ShowDialog();
+
             Filename = OpenFileDialog1.FileName;
+
             FileStream fs = new FileStream(Filename, FileMode.Open);
+
             Agents = (ObservableCollection<Agent>)XML_serial.Deserialize(fs);
+
             fs.Close();
         }
 
